@@ -1,6 +1,7 @@
 package com.springbootacademy.security_jwt.utill.mapper;
 
 import com.springbootacademy.security_jwt.dto.RoleDTO;
+import com.springbootacademy.security_jwt.dto.SignupRequest;
 import com.springbootacademy.security_jwt.dto.UserDTO;
 import com.springbootacademy.security_jwt.entity.Role;
 import com.springbootacademy.security_jwt.entity.User;
@@ -12,5 +13,5 @@ public interface MapStract {
     Role RoleDTOToRole(RoleDTO roleDTO);
 
 
-    User UserDTOToUser(UserDTO userDTO);
+    User UserDTOToUser(SignupRequest signupRequest);
 }

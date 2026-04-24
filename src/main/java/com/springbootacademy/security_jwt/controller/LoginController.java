@@ -19,7 +19,10 @@ public class LoginController {
     )
     public LoginResponseDto createJwtTokenAndLogin(@RequestBody LoginRequestDto loginRequestDto) throws Exception{
 
-        System.out.println("createJwtTokenAndLogin");
+        String UN = loginRequestDto.getUsername();
+        String PASS = loginRequestDto.getPassword();
+
+        System.out.println("request came to controller");
        return jwtService.createJwtToken(loginRequestDto);
 
     }
@@ -30,7 +33,5 @@ public class LoginController {
     public String test(){
         return "test";
     }
-
-
 
 }

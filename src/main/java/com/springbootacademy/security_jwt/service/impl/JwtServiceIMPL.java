@@ -34,30 +34,40 @@ public class JwtServiceIMPL implements JwtService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("2loadUserByUsername");
         User user = userRepo.findById(username).get();
 
         if(user != null){
+            System.out.println("3 user  found"+ user.getUserName());
 
             return new org.springframework.security.core.userdetails.User(
                     user.getUserName(),
                     user.getUserPassword(),
                     getAuthority(user)
             );
+
         }else{
+            System.out.println("4 user not found");
             throw new UsernameNotFoundException("User not found"+username);
+
         }
     }
 
     @Override
     public LoginResponseDto createJwtToken(LoginRequestDto loginRequestDto) throws Exception {
 
+        System.out.println("1createJwtToken");
+
         String username = loginRequestDto.getUsername();
         String password = loginRequestDto.getPassword();
 
+        System.out.println("before authantication");
         authanticate(username,password);
+        System.out.println("authanticated");
 
         UserDetails userDetails = loadUserByUsername(username);
       String newGenarateToken =   jwtUtil.generateToken(userDetails);
+        System.out.println("4Token created");
       User user = userRepo.findById(username).get();
 
       LoginResponseDto loginResponseDto = new LoginResponseDto(
@@ -72,9 +82,11 @@ public class JwtServiceIMPL implements JwtService, UserDetailsService {
     private void authanticate(String username, String password) throws Exception {
         try{
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            System.out.println("UN PW authentication ok");
         }catch (BadCredentialsException e){
+            System.out.println("UN PW authentication wrong");
            throw  new BadCredentialsException("Invalide credentials"+e.getMessage());
         }
     }
