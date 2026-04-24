@@ -1,5 +1,6 @@
 package com.springbootacademy.security_jwt.service.impl;
 
+import com.springbootacademy.security_jwt.dto.SignupRequest;
 import com.springbootacademy.security_jwt.dto.UserDTO;
 import com.springbootacademy.security_jwt.entity.Role;
 import com.springbootacademy.security_jwt.entity.User;
@@ -29,13 +30,38 @@ public class UserServiceIMPL implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public String createUser(UserDTO userDTO) {
+    public User createUser(SignupRequest signupRequest) {
 
-       User user =  mapStract.UserDTOToUser(userDTO);
+        if(!userRepo.existsById(signupRequest.getUsername())){
 
-        userRepo.save(user);
+            User  user = new User();
 
-        return "result added!";
+            user.setUserName(signupRequest.getUsername());
+            user.setUserPassword(getEncodedPassword(signupRequest.getUserPassword()));
+            user.setUserFirstName(signupRequest.getUserFirstName());
+            user.setUserLastName(signupRequest.getUserLastName());
+
+            Set<Role> adminRoles = new HashSet<>();
+
+
+            if(signupRequest.getUserRole().equalsIgnoreCase("user")){
+                Role role = new Role();
+                role.setRoleName(signupRequest.getUserRole());
+                adminRoles.add(role);
+            }else{
+                throw new RuntimeException("no roles like this");
+            }
+
+            user.setRole(adminRoles);
+          return  userRepo.save(user);
+//            return "result added!";
+
+        }
+        else {
+
+            throw new RuntimeException("User Already Registered This Email!");
+        }
+
 
 
     }
